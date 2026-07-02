@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Funded Trader Course — Pass the Challenge, Keep the Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;800&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F1620;
+  --panel:#18212D;
+  --panel2:#1E2938;
+  --line:#2B3648;
+  --ink:#E9E4D6;
+  --muted:#8B95A6;
+  --amber:#E8A33D;
+  --amber-dim:#8A6420;
+  --green:#4CAF7D;
+  --red:#DE5B5B;
+  --radius:10px;
+  font-size:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.65}
+.mono{font-family:'IBM Plex Mono',monospace}
+h1,h2,h3{font-family:'Bitter',serif}
+a{color:var(--amber)}
+
+.wrap{max-width:880px;margin:0 auto;padding:0 20px}
+
+/* ── Hero ── */
+header{border-bottom:1px solid var(--line);padding:56px 0 40px;background:
+  linear-gradient(180deg,#121B27 0%,var(--bg) 100%)}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+header h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:800;line-height:1.15;margin-bottom:16px}
+header h1 em{font-style:normal;color:var(--amber)}
+.lede{color:var(--muted);max-width:640px;font-size:1.05rem}
+.ticker{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px}
+.tick{font-family:'IBM Plex Mono',monospace;font-size:.8rem;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 12px;color:var(--muted)}
+.tick b{color:var(--ink);font-weight:600}
+.tick .up{color:var(--green)} .tick .dn{color:var(--red)}
+
+/* ── Progress bar ── */
+.progressbar{position:sticky;top:0;z-index:50;background:rgba(15,22,32,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.progress-inner{display:flex;align-items:center;gap:14px;padding:10px 20px;max-width:880px;margin:0 auto}
+.ptrack{flex:1;height:8px;background:var(--panel2);border-radius:99px;overflow:hidden}
+.pfill{height:100%;width:0%;background:linear-gradient(90deg,var(--amber-dim),var(--amber));border-radius:99px;transition:width .4s ease}
+.plabel{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+
+/* ── Modules ── */
+main{padding:40px 0 80px}
+.module{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);margin-bottom:22px;overflow:hidden}
+.mod-head{display:flex;align-items:center;gap:16px;padding:20px 22px;cursor:pointer;user-select:none}
+.mod-head:hover{background:var(--panel2)}
+.mod-num{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--amber);border:1px solid var(--amber-dim);border-radius:6px;padding:4px 9px;white-space:nowrap}
+.mod-title{font-family:'Bitter',serif;font-weight:700;font-size:1.12rem;flex:1}
+.mod-status{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted)}
+.mod-status.done{color:var(--green)}
+.chev{color:var(--muted);transition:transform .25s}
+.module.open .chev{transform:rotate(90deg)}
+.mod-body{display:none;padding:6px 26px 28px;border-top:1px solid var(--line)}
+.module.open .mod-body{display:block}
+.mod-body h3{color:var(--amber);font-size:1rem;margin:26px 0 10px;letter-spacing:.01em}
+.mod-body p{margin-bottom:14px;color:#CFC9BC}
+.mod-body p b, .mod-body li b{color:var(--ink)}
+.mod-body ul{margin:0 0 16px 22px}
+.mod-body li{margin-bottom:9px;color:#CFC9BC}
+
+.callout{border-left:3px solid var(--amber);background:var(--panel2);border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0}
+.callout.red{border-left-color:var(--red)}
+.callout.green{border-left-color:var(--green)}
+.callout p{margin:0;color:var(--ink);font-size:.95rem}
+.callout .ctag{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+th{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);color:#CFC9BC}
+td.num{font-family:'IBM Plex Mono',monospace}
+td .up{color:var(--green)} td .dn{color:var(--red)}
+
+/* ── Tools ── */
+.tool{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin:20px 0}
+.tool h4{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.field label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:5px}
+.field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:9px 10px;font-family:'IBM Plex Mono',monospace;font-size:.9rem}
+.field input:focus,.field select:focus{outline:2px solid var(--amber-dim);border-color:var(--amber-dim)}
+button.act{background:var(--amber);color:#141414;border:none;border-radius:6px;padding:10px 18px;font-weight:700;font-family:'Public Sans',sans-serif;cursor:pointer;font-size:.9rem}
+button.act:hover{filter:brightness(1.08)}
+button.act:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.result{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:.92rem;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;white-space:pre-line}
+.result .big{font-size:1.25rem;font-weight:600;color:var(--amber)}
+canvas{width:100%;border-radius:8px;background:var(--bg);border:1px solid var(--line);margin-top:14px}
+
+/* ── Quiz ── */
+.quiz{margin-top:22px;border-top:1px dashed var(--line);padding-top:18px}
+.q{margin-bottom:18px}
+.q .qq{font-weight:600;margin-bottom:10px;color:var(--ink)}
+.opt{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer;font-size:.93rem;color:#CFC9BC}
+.opt:hover{border-color:var(--amber-dim)}
+.opt.correct{border-color:var(--green);background:rgba(76,175,125,.09);color:var(--ink)}
+.opt.wrong{border-color:var(--red);background:rgba(222,91,91,.08)}
+.explain{display:none;font-size:.87rem;color:var(--muted);border-left:2px solid var(--green);padding:6px 12px;margin-top:6px}
+.explain.show{display:block}
+
+.complete-row{margin-top:24px;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+.complete-row label{cursor:pointer;font-size:.9rem;color:var(--muted)}
+.complete-row input{width:18px;height:18px;accent-color:var(--amber);cursor:pointer}
+
+footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--muted);font-size:.85rem}
+@media (max-width:560px){
+  .mod-head{padding:16px 16px}
+  .mod-body{padding:4px 16px 22px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Eleven modules · Calculators · Challenge simulator · Worked example</div>
+    <h1>The Funded Trader Course<br><em>Pass the challenge. Keep the account.</em></h1>
+    <p class="lede">A no-nonsense course on prop-firm trading. No secret indicators, no gurus — just the mechanics, the maths, and the discipline that separate the ~10% who get funded from the 90% who pay fees and fail. Built for a complete beginner starting from zero in Ireland.</p>
+    <div class="ticker">
+      <div class="tick">CHALLENGE PASS RATE <b class="dn">≈ 10%</b></div>
+      <div class="tick">EDGE REQUIRED <b class="up">DISCIPLINE</b></div>
+      <div class="tick">DEMO TIME BEFORE PAYING <b>3–6 MONTHS</b></div>
+      <div class="tick">MAX RISK / TRADE <b class="up">1%</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="progressbar">
+  <div class="progress-inner">
+    <span class="plabel">COURSE PROGRESS</span>
+    <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    <span class="plabel" id="plabel">0 / 11</span>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- MODULE 1 -->
+<div class="module open" data-mod="1">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">01</span>
+    <span class="mod-title">How Prop Firms Really Make Money</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Before learning to trade, understand the business you're walking into. A prop firm (FTMO, FundedNext, The5ers, E8, and hundreds of others) sells you a <b>challenge</b>: pay a fee of roughly €50–€600, hit a profit target (usually 8–10%) on a demo account without breaking their loss rules, and they "fund" you with a larger account where you keep 70–90% of profits.</p>
+    <h3>Follow the money</h3>
+    <p>Most prop firms earn the majority of their revenue from <b>challenge fees, not trading profits</b>. The economics only work because most people fail. Industry data and firms' own disclosures suggest that only around <b>5–10% of buyers ever pass</b>, and far fewer ever receive a payout. Many funded accounts are also still simulated — the firm pays you from fee revenue and copies only its best traders into real markets.</p>
+    <div class="callout red">
+      <span class="ctag">Reality check</span>
+      <p>This is not a scam by default — reputable firms do pay out real money to consistent traders. But the product is designed so that impatient, under-prepared traders fund the winners. Your entire job is to not be the impatient one.</p>
+    </div>
+    <h3>The rules that fail people</h3>
+    <ul>
+      <li><b>Profit target:</b> typically 8–10% in Phase 1, 4–5% in Phase 2.</li>
+      <li><b>Maximum daily loss:</b> usually 5%. Breach it once — even for a second, even on a floating loss — and you fail instantly.</li>
+      <li><b>Maximum overall drawdown:</b> usually 10% (sometimes "trailing", which is much harsher — it follows your equity peak upward).</li>
+      <li><b>Consistency rules:</b> some firms fail you if one day produces too large a share of your profit.</li>
+      <li><b>News restrictions:</b> many firms void trades opened within minutes of major news releases.</li>
+    </ul>
+    <p>Notice something: <b>every rule punishes aggression</b>. The challenge is not a test of prediction. It is a test of whether you can make steady gains without ever having one bad day. That is why this course is mostly about risk, not about "signals".</p>
+    <div class="quiz" data-quiz="1">
+      <div class="q">
+        <div class="qq">Q1 — Where does most prop-firm revenue come from?</div>
+        <div class="opt" data-c="0">Their traders' profits in the real market</div>
+        <div class="opt" data-c="1">Challenge fees paid by people who fail</div>
+        <div class="opt" data-c="0">Government subsidies for financial education</div>
+        <div class="explain">Correct: fees from the ~90% who fail are the core business model. Knowing this keeps you from re-buying challenges emotionally.</div>
+      </div>
+      <div class="q">
+        <div class="qq">Q2 — You're up 6% on the challenge, then one open trade dips you past the 5% daily loss limit for 30 seconds before recovering. What happens?</div>
+        <div class="opt" data-c="1">You fail instantly — floating losses count</div>
+        <div class="opt" data-c="0">Nothing, only closed losses count</div>
+        <div class="opt" data-c="0">You get a warning email first</div>
+        <div class="explain">At most firms the daily loss limit applies to <b>equity</b>, including open trades. One oversized position can end a challenge you were winning.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c1" onchange="markDone(1,this)">
+      <label for="c1">Mark Module 01 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 2 -->
+<div class="module" data-mod="2">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">02</span>
+    <span class="mod-title">Market Basics: What You're Actually Trading</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Most prop-firm traders trade <b>forex</b> (currency pairs like EUR/USD), <b>indices</b> (like US30 or NAS100), or <b>gold (XAU/USD)</b> through CFDs. You never own anything — you're speculating on price moving up ("long") or down ("short").</p>
+    <h3>The vocabulary you must know cold</h3>
+    <table>
+      <tr><th>Term</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><b>Pip</b></td><td>Smallest standard price step</td><td class="num">EUR/USD 1.0850 → 1.0851 = 1 pip</td></tr>
+      <tr><td><b>Lot</b></td><td>Position size unit (1 lot = 100,000 units)</td><td class="num">0.10 lot EUR/USD ≈ €1/pip... $1/pip</td></tr>
+      <tr><td><b>Spread</b></td><td>Broker's built-in cost per trade</td><td class="num">Buy at 1.0851, sell price 1.0850</td></tr>
+      <tr><td><b>Leverage</b></td><td>Borrowed exposure (e.g. 1:100)</td><td class="num">€1,000 controls €100,000</td></tr>
+      <tr><td><b>Stop loss</b></td><td>Order that closes a losing trade automatically</td><td class="num">Non-negotiable. Every trade.</td></tr>
+      <tr><td><b>Take profit</b></td><td>Order that closes a winning trade</td><td class="num">Set before you enter</td></tr>
+      <tr><td><b>R:R</b></td><td>Reward-to-risk ratio</td><td class="num">Risk 20 pips to make 40 = 1:2</td></tr>
+    </table>
+    <div class="callout red">
+      <span class="ctag">Leverage is the killer</span>
+      <p>Leverage doesn't create profit — it multiplies both directions. Retail CFD brokers in the EU must disclose loser rates: typically <b>70–80% of retail accounts lose money</b>, and oversized leveraged positions are the main reason. Your position size, not your prediction, decides whether you survive.</p>
+    </div>
+    <h3>Sessions and when to trade</h3>
+    <p>Markets move in sessions. For someone in Ireland this is convenient: the <b>London session (8:00–16:30)</b> and the <b>London/New York overlap (13:30–16:30 Irish time)</b> have the most movement in EUR/USD, GBP/USD, gold and US indices. Trading two focused hours in the overlap beats staring at charts all day.</p>
+    <div class="quiz" data-quiz="2">
+      <div class="q">
+        <div class="qq">Q1 — With 1:100 leverage, a €1,000 account controlling €100,000 of EUR/USD moves against you by 1%. What happened to your account?</div>
+        <div class="opt" data-c="0">Lost 1% — €10</div>
+        <div class="opt" data-c="1">Lost 100% — the account is wiped out</div>
+        <div class="opt" data-c="0">Nothing until you close the trade</div>
+        <div class="explain">A 1% market move on 100× exposure equals 100% of your capital. This is why position sizing (Module 3) matters more than any strategy.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c2" onchange="markDone(2,this)">
+      <label for="c2">Mark Module 02 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 3 -->
+<div class="module" data-mod="3">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">03</span>
+    <span class="mod-title">Risk Management — The Only Real "Secret"</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Here is the entire "secret" professionals actually use, in one sentence: <b>risk so little per trade that no losing streak can hurt you, and let a modest statistical edge compound.</b> Everything else is decoration.</p>
+    <h3>The 1% rule</h3>
+    <p>Never risk more than 1% of the account on a single trade (0.5% during a challenge is even safer). On a $10,000 challenge account, that's $100 maximum loss per trade. With a 5% daily loss limit, you can be wrong <b>five times in one day</b> and still be alive. Risk 2.5% per trade and two bad trades end everything.</p>
+    <h3>Why losses are heavier than gains</h3>
+    <table>
+      <tr><th>Loss taken</th><th>Gain needed to recover</th></tr>
+      <tr><td class="num">−5%</td><td class="num"><span class="up">+5.3%</span></td></tr>
+      <tr><td class="num">−10%</td><td class="num"><span class="up">+11.1%</span></td></tr>
+      <tr><td class="num">−25%</td><td class="num"><span class="up">+33.3%</span></td></tr>
+      <tr><td class="num">−50%</td><td class="num"><span class="dn">+100%</span></td></tr>
+    </table>
+    <p>Drawdown is asymmetric. Protecting capital isn't cautious — it's mathematically optimal.</p>
+
+    <div class="tool">
+      <h4>Tool · Position Size Calculator</h4>
+      <div class="grid">
+        <div class="field"><label>Account size ($)</label><input type="number" id="ps-acc" value="10000"></div>
+        <div class="field"><label>Risk per trade (%)</label><input type="number" id="ps-risk" value="1" step="0.25"></div>
+        <div class="field"><label>Stop loss (pips)</label><input type="number" id="ps-sl" value="20"></div>
+        <div class="field"><label>Pip value per 1.0 lot ($)</label><input type="number" id="ps-pip" value="10"></div>
+      </div>
+      <button class="act" onclick="calcPos()">Calculate lot size</button>
+      <div class="result" id="ps-out">Enter your numbers and calculate. Rule: decide the stop loss FIRST, then let the maths decide the size — never the other way round.</div>
+    </div>
+
+    <div class="tool">
+      <h4>Tool · Drawdown Recovery Calculator</h4>
+      <div class="grid">
+        <div class="field"><label>Drawdown suffered (%)</label><input type="number" id="dd-in" value="8"></div>
+      </div>
+      <button class="act" onclick="calcDD()">Show recovery needed</button>
+      <div class="result" id="dd-out">See how the hole gets deeper faster than it fills.</div>
+    </div>
+
+    <div class="callout green">
+      <span class="ctag">The challenge math</span>
+      <p>Target +10%, risking 0.5–1% per trade with a 1:2 reward-to-risk means you need roughly <b>10–15 net winning R</b> over a month. That's about one decent trade every day or two. Nobody needs to double an account. Slow is the strategy.</p>
+    </div>
+
+    <div class="quiz" data-quiz="3">
+      <div class="q">
+        <div class="qq">Q1 — You lose 10% of your account. What gain do you now need just to break even?</div>
+        <div class="opt" data-c="0">10%</div>
+        <div class="opt" data-c="1">About 11.1%</div>
+        <div class="opt" data-c="0">About 9%</div>
+        <div class="explain">Recovery is calculated on the smaller remaining balance, so it's always more than the loss. This asymmetry is why capital protection comes first.</div>
+      </div>
+      <div class="q">
+        <div class="qq">Q2 — Which comes first when planning a trade?</div>
+        <div class="opt" data-c="1">The stop loss — then size the position to fit 1% risk</div>
+        <div class="opt" data-c="0">The lot size — then find a stop that fits</div>
+        <div class="opt" data-c="0">The profit target — risk follows reward</div>
+        <div class="explain">Where the trade is wrong (the stop) is a market decision. How much that costs you is a sizing decision. Stop first, size second, always.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c3" onchange="markDone(3,this)">
+      <label for="c3">Mark Module 03 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 4 -->
+<div class="module" data-mod="4">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">04</span>
+    <span class="mod-title">Reading Charts Without the Mysticism</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Charts don't predict the future. They show where buyers and sellers have committed money, which lets you place stops and targets in sensible places. That's all technical analysis needs to do for you.</p>
+    <h3>Candlesticks in 60 seconds</h3>
+    <p>Each candle shows four prices for its time period: open, high, low, close. A candle closing above its open is bullish (buyers won that period); below, bearish. The <b>wicks</b> show where price was rejected. You don't need to memorise 40 pattern names — you need to answer one question per chart: <b>who is in control right now, and where would they be proven wrong?</b></p>
+    <h3>The only three concepts that matter to start</h3>
+    <ul>
+      <li><b>Trend:</b> a market making higher highs and higher lows is trending up. Trade with it, not against it. "The trend is your friend" is a cliché because fighting trends is the fastest way to donate money.</li>
+      <li><b>Support and resistance:</b> price levels where the market has repeatedly turned. These are where you place entries and stops — just beyond them, not exactly on them (everyone's stops cluster at obvious levels, and price loves to sweep them).</li>
+      <li><b>Risk-to-reward geometry:</b> if the distance to a sensible stop is 20 pips and the distance to the next resistance is only 15 pips, the trade is bad no matter how pretty the setup looks. Skip it.</li>
+    </ul>
+    <div class="callout">
+      <span class="ctag">On indicators</span>
+      <p>Moving averages, RSI, MACD — all of them are just averages of past price. They can help you stay objective, but no indicator is an edge by itself. If a YouTube video promises a "95% win-rate indicator", you now know exactly who its business model resembles (see Module 01).</p>
+    </div>
+    <h3>Timeframes for a beginner</h3>
+    <p>Start with the <b>daily and 4-hour charts</b> to read direction, and the <b>1-hour or 15-minute</b> chart to time entries. Avoid the 1-minute chart entirely — it's noise, and it manufactures overtrading, which is the #1 challenge killer.</p>
+    <div class="quiz" data-quiz="4">
+      <div class="q">
+        <div class="qq">Q1 — A setup has a 25-pip stop and 12 pips of room before major resistance. What do you do?</div>
+        <div class="opt" data-c="0">Take it — the pattern looks strong</div>
+        <div class="opt" data-c="0">Take it with double size to compensate</div>
+        <div class="opt" data-c="1">Skip it — the reward doesn't justify the risk</div>
+        <div class="explain">A trade risking 25 to make 12 needs a ~68% win rate just to break even. Geometry vetoes opinion, every time.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c4" onchange="markDone(4,this)">
+      <label for="c4">Mark Module 04 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 5 -->
+<div class="module" data-mod="5">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">05</span>
+    <span class="mod-title">One Setup, Traded a Hundred Times</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Amateurs collect strategies. Professionals trade <b>one boring setup with positive expectancy, over and over</b>, and keep a record proving it works. Here is a complete beginner framework — not because it's magic, but because it's simple enough to execute identically 100 times.</p>
+    <h3>The pullback-in-trend setup</h3>
+    <ul>
+      <li><b>1. Direction (4H chart):</b> price must be making higher highs and higher lows (for longs). If the 4H is sideways or unclear — no trade today. Most days are no-trade days.</li>
+      <li><b>2. Location (1H chart):</b> wait for price to pull back to a previous support level or the area of the 20-period moving average. You are buying the dip in an uptrend, not chasing green candles.</li>
+      <li><b>3. Trigger (1H/15m):</b> a strong bullish candle closing off that level — evidence buyers defended it.</li>
+      <li><b>4. Stop:</b> below the pullback low, plus a small buffer.</li>
+      <li><b>5. Target:</b> the previous high, only if it's at least 2× the stop distance away. Otherwise skip.</li>
+      <li><b>6. Size:</b> from the Module 03 calculator. Then don't touch the trade. Stop or target — walk away.</li>
+    </ul>
+    <h3>Expectancy: the number that decides everything</h3>
+    <p>Your edge in one formula: <span class="mono">(Win% × AvgWin) − (Loss% × AvgLoss)</span>. A 40% win rate with 1:2 R:R gives <span class="mono">(0.4×2R) − (0.6×1R) = <b>+0.2R per trade</b></span> — a losing-most-of-the-time system that steadily makes money. This is the fact that surprises every beginner: <b>you can be wrong more often than right and still win</b>, if your winners are bigger and your risk is constant.</p>
+    <h3>Backtesting: the unpaid apprenticeship</h3>
+    <p>Before risking anything, scroll back on TradingView and mark 100 historical occurrences of your setup. Record each in a spreadsheet: date, direction, R result. This does two things — it proves (or disproves) the edge, and it shows you what a normal 6-trade losing streak looks like <i>before</i> one happens with money on the line.</p>
+    <div class="callout green">
+      <span class="ctag">The journal rule</span>
+      <p>Every real trade gets a journal entry: screenshot, reason for entry, result, and one sentence on execution quality. Traders who journal improve; traders who don't repeat the same five mistakes for years. This habit alone is worth more than any paid course.</p>
+    </div>
+    <div class="quiz" data-quiz="5">
+      <div class="q">
+        <div class="qq">Q1 — A system wins only 40% of the time with 1:2 reward-to-risk. Over 100 trades it will most likely…</div>
+        <div class="opt" data-c="1">Make about +20R — a solid profit</div>
+        <div class="opt" data-c="0">Lose money — you can't win losing 60% of trades</div>
+        <div class="opt" data-c="0">Break even</div>
+        <div class="explain">40 wins × 2R = 80R gained; 60 losses × 1R = 60R lost; net +20R. Expectancy beats win rate. This is the core arithmetic of professional trading.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c5" onchange="markDone(5,this)">
+      <label for="c5">Mark Module 05 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 6 -->
+<div class="module" data-mod="6">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">06</span>
+    <span class="mod-title">Psychology: Why Smart People Fail Challenges</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Challenges are rarely lost to bad analysis. They're lost in about four predictable emotional states. Learn to recognise them by name — naming the state is half of defusing it.</p>
+    <ul>
+      <li><b>Revenge trading:</b> after a loss, immediately re-entering (often bigger) to "win it back". This is how a controlled −1% day becomes a −5% instant failure. Antidote: a hard rule — after two losses, the platform gets closed for the day. No exceptions, no "one more".</li>
+      <li><b>Overtrading:</b> boredom trades on days with no setup. Your edge exists only in your setup; every other trade is a donation. Antidote: a written checklist that must be fully ticked before entry.</li>
+      <li><b>Moving the stop:</b> "it'll come back." Widening a stop converts a planned small loss into an unplanned catastrophe. Antidote: the stop is set at entry and never widened. Ever.</li>
+      <li><b>Euphoria sizing:</b> after three wins, doubling size because you're "in the zone". Variance doesn't know you're in the zone. Antidote: risk % is fixed in your plan, not adjusted by mood.</li>
+    </ul>
+    <h3>Pressure and the unemployed trader</h3>
+    <div class="callout red">
+      <span class="ctag">This part matters most</span>
+      <p>Trading money you need is the single strongest predictor of breaking every rule above. "I must make rent this month from trading" produces oversized positions, revenge trades, and blown accounts — the pressure itself destroys the edge. Trading should be funded only from money whose total loss changes nothing, and lives alongside stable income (a job, teaching, contracting), never instead of it. This isn't moralising — it's performance advice. The traders who pass are the relaxed ones.</p>
+    </div>
+    <h3>A daily routine that protects you</h3>
+    <ul>
+      <li><b>Before the session:</b> mark levels, define the one scenario you'd trade, write it down.</li>
+      <li><b>During:</b> maximum 2 trades. Stop after −2% day or +2% day (banking a green day compounds calm).</li>
+      <li><b>After:</b> journal, close everything, do something physical. The market reopens tomorrow; it always does.</li>
+    </ul>
+    <div class="quiz" data-quiz="6">
+      <div class="q">
+        <div class="qq">Q1 — You just took two losses (−2% total) and see a "perfect" third setup. Your plan says stop at two losses. What's the professional move?</div>
+        <div class="opt" data-c="0">Take it — the setup qualifies and you need the recovery</div>
+        <div class="opt" data-c="1">Close the platform — the rule exists precisely for this moment</div>
+        <div class="opt" data-c="0">Take it at half size as a compromise</div>
+        <div class="explain">Rules that bend under emotion aren't rules. The third trade after two losses is statistically your worst-executed trade of the day — that's why the rule exists.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c6" onchange="markDone(6,this)">
+      <label for="c6">Mark Module 06 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 7 -->
+<div class="module" data-mod="7">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">07</span>
+    <span class="mod-title">Challenge Tactics + The Simulator</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Once the fundamentals exist, passing a challenge is a pacing problem. Here's how disciplined traders approach it — and a simulator to test any plan against a thousand random futures before spending a euro.</p>
+    <h3>The pacing playbook</h3>
+    <ul>
+      <li><b>Risk 0.5% per trade during challenges.</b> Yes, it's slow. A 10% target at +0.2R expectancy takes ~4–8 weeks of normal trading. Most firms now have no time limit — use that.</li>
+      <li><b>Never hold a position that could breach the daily limit.</b> Your worst-case open risk should stay under half the daily allowance.</li>
+      <li><b>Bank the pass, don't style it.</b> At +8% of a +10% target, cut risk to 0.25%. The last 2% is where people blow up trying to finish in one trade.</li>
+      <li><b>Know the fine print:</b> trailing vs static drawdown, news rules, weekend holding rules, consistency rules, minimum trading days. Failing on a technicality after profitable trading is heartbreak you can read your way out of.</li>
+      <li><b>Buy one challenge only after 3 consecutive profitable months on demo</b> under the exact same rules. The demo months cost nothing and predict everything.</li>
+    </ul>
+
+    <div class="tool">
+      <h4>Tool · Challenge Simulator (1,000 futures)</h4>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:14px">Simulates 1,000 random challenge attempts with your stats. Rules: +10% target, −5% daily loss, −10% max drawdown, max 3 trades/day, up to 60 trading days.</p>
+      <div class="grid">
+        <div class="field"><label>Win rate (%)</label><input type="number" id="sim-wr" value="42"></div>
+        <div class="field"><label>Reward:risk (R)</label><input type="number" id="sim-rr" value="2" step="0.1"></div>
+        <div class="field"><label>Risk per trade (%)</label><input type="number" id="sim-risk" value="0.5" step="0.25"></div>
+        <div class="field"><label>Trades per day</label><input type="number" id="sim-tpd" value="2" min="1" max="3"></div>
+      </div>
+      <button class="act" onclick="runSim()">Run 1,000 challenges</button>
+      <div class="result" id="sim-out">Try your numbers — then try risking 2% per trade with the same win rate and watch the pass rate collapse. That experiment is the whole course in one chart.</div>
+      <canvas id="sim-canvas" height="220"></canvas>
+    </div>
+
+    <div class="callout">
+      <span class="ctag">Fee budgeting</span>
+      <p>Decide in advance the total you're willing to spend on challenge fees for the entire year — an amount whose loss changes nothing — and treat it as spent the day you commit it. If it runs out, the market's message is "more demo time needed", not "buy another one".</p>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c7" onchange="markDone(7,this)">
+      <label for="c7">Mark Module 07 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 8 -->
+<div class="module" data-mod="8">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">08</span>
+    <span class="mod-title">Ireland Practicalities: Tax, Regulation, Scams</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <h3>Tax (talk to an accountant — but know the shape)</h3>
+    <p>Prop-firm payouts are generally <b>not</b> like personal trading gains: you're typically paid as an independent contractor of the firm, which in Ireland usually means the income is treated as <b>self-employed trading income</b> — registered with Revenue, filed via Form 11, with income tax, USC and PRSI applying. Personal CFD/spread-betting profits are taxed differently again. Rules change and individual situations vary, so before any real payouts arrive, one hour with an Irish accountant is money well spent.</p>
+    <h3>Regulation and choosing firms</h3>
+    <ul>
+      <li>Prop firms are mostly <b>unregulated</b> — they're selling an evaluation service, not brokerage. Your protection is their reputation, so check payout proof, Trustpilot patterns (look at the 1-star reviews specifically), and how long they've operated. Several well-known firms have collapsed overnight taking pending payouts with them.</li>
+      <li>For any personal live trading, use a broker regulated by the <b>Central Bank of Ireland or another EU regulator (CySEC etc.)</b> — EU rules cap retail leverage (1:30 on major forex) and provide negative balance protection for a reason.</li>
+      <li>The Central Bank of Ireland publishes warnings about unauthorised firms — check the register before sending anyone money.</li>
+    </ul>
+    <h3>The scam radar</h3>
+    <p>Trading attracts predators, and unemployed people are their favourite audience. Automatic disqualifiers:</p>
+    <ul>
+      <li>Anyone promising fixed returns ("2% per day"), guaranteed passes, or "account management" where you hand over money or logins.</li>
+      <li>Signal groups on Telegram/WhatsApp, "copy my trades" schemes, and mentors whose income is selling mentorship rather than trading.</li>
+      <li>Recovery scams — after a loss, someone contacts you claiming they can recover your funds for a fee. It's the same scammer.</li>
+      <li>Lifestyle marketing: rented Lamborghinis and screenshots are free; audited multi-year track records are almost nonexistent. Behave accordingly.</li>
+    </ul>
+    <div class="quiz" data-quiz="8">
+      <div class="q">
+        <div class="qq">Q1 — A Telegram mentor with 40k followers offers guaranteed challenge passes for €300. What does this tell you?</div>
+        <div class="opt" data-c="0">It's worth €300 to skip the learning curve</div>
+        <div class="opt" data-c="1">It's a scam — pass rates can't be guaranteed, and firms ban account sharing</div>
+        <div class="opt" data-c="0">It's legitimate if they show payout screenshots</div>
+        <div class="explain">"Guaranteed pass" services either steal the fee or breach firm rules (getting the account terminated). Screenshots are trivially faked. No exceptions to this one.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c8" onchange="markDone(8,this)">
+      <label for="c8">Mark Module 08 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 9 -->
+<div class="module" data-mod="9">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">09</span>
+    <span class="mod-title">The 6-Month Roadmap (Zero to First Challenge)</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>This plan costs almost nothing until month 5 at the earliest — and it front-loads the parts that decide success. Skipping stages doesn't speed anything up; it just moves the tuition fee from time to money.</p>
+    <table>
+      <tr><th>Weeks</th><th>Focus</th><th>Pass condition to move on</th></tr>
+      <tr><td class="num">1–2</td><td>Modules 1–3 of this course; open a free TradingView account; learn the platform (MT5 or the firm's platform, demo)</td><td>Can explain pip, lot, leverage, and size a 1% trade without the calculator</td></tr>
+      <tr><td class="num">3–4</td><td>Modules 4–5; choose ONE market (e.g. EUR/USD or gold) and ONE setup</td><td>Setup written as a checklist a stranger could follow</td></tr>
+      <tr><td class="num">5–8</td><td>Backtest 100 historical setups; build the journal spreadsheet</td><td>Documented expectancy is positive across 100 samples</td></tr>
+      <tr><td class="num">9–16</td><td>Demo trade live markets, 0.5% risk, full challenge rules self-imposed</td><td>2 consecutive profitable months without breaking a single rule</td></tr>
+      <tr><td class="num">17–20</td><td>Third demo month; run the Module 07 simulator on your real stats</td><td>3rd green month + simulator pass rate above ~40%</td></tr>
+      <tr><td class="num">21+</td><td>First paid challenge, cheapest account size, 0.5% risk, playbook from Module 07</td><td>—</td></tr>
+    </table>
+    <div class="callout green">
+      <span class="ctag">Parallel track</span>
+      <p>Because months of demo trading pay nothing, run income alongside it — job applications, part-time or contract work. This isn't a detour from the trading goal; it's what makes the trading goal achievable, because it removes the pressure that fails challenges (Module 06). The traders who make it treat trading as a skill acquired patiently next to life, not a lottery ticket instead of it.</p>
+    </div>
+    <h3>Free resources worth the time</h3>
+    <ul>
+      <li><b>Babypips.com "School of Pipsology"</b> — the standard free forex curriculum; excellent and genuinely free.</li>
+      <li><b>TradingView</b> — free charting and the replay tool for backtesting.</li>
+      <li><b>The firms' own rulebooks and free trials</b> — FTMO and others offer free trial challenges; use them as demo environments with real rules.</li>
+      <li>Books: <i>Trading in the Zone</i> (Douglas) for psychology; <i>The Daily Trading Coach</i> (Steenbarger).</li>
+    </ul>
+    <div class="complete-row">
+      <input type="checkbox" id="c9" onchange="markDone(9,this)">
+      <label for="c9">Mark Module 09 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 10 -->
+<div class="module" data-mod="10">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">10</span>
+    <span class="mod-title">Choosing a Prop Firm: Real Challenge Structures Compared</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <h3>How "getting in" actually works</h3>
+    <p>There is no application, interview, or CV. You go to the firm's website, pick an account size, pay the fee by card, and receive demo login credentials — usually within minutes. <b>The barrier to entry is zero; the barrier is passing.</b> That's precisely why the industry is full of people who bought in before they were ready. You get in whenever you like; the whole game is arriving prepared.</p>
+
+    <h3>The two challenge formats</h3>
+    <ul>
+      <li><b>Two-step (the standard):</b> Phase 1 targets ~8–10% profit, Phase 2 targets ~4–5%, then you're funded. Cheaper fees, more forgiving pacing, and the format the Module 07 playbook assumes. <b>Start here.</b></li>
+      <li><b>One-step / instant funding:</b> a single ~10% target, or immediate "funding" — but with tighter drawdowns (often trailing) and higher fees. Trailing drawdown follows your equity peak upward, so a winning run followed by a normal pullback can fail you while you're in profit. Beginners should avoid trailing-drawdown products entirely.</li>
+    </ul>
+
+    <h3>What the well-known firms' challenges look like</h3>
+    <p>Approximate structures for a <b>$10,000 two-step account</b> at long-established firms, to show you the shape of the market. Details and prices change constantly — treat this as a map, and <b>verify every number on the firm's own site the week you buy</b>:</p>
+    <table>
+      <tr><th>Firm</th><th>P1 / P2 target</th><th>Daily loss</th><th>Max drawdown</th><th>Fee (approx.)</th><th>Profit split</th></tr>
+      <tr><td><b>FTMO</b> <span style="color:var(--muted)">(est. 2015)</span></td><td class="num">10% / 5%</td><td class="num">5%</td><td class="num">10% static</td><td class="num">~€150</td><td class="num">80–90%</td></tr>
+      <tr><td><b>FundedNext</b></td><td class="num">8% / 5%</td><td class="num">5%</td><td class="num">10% static</td><td class="num">~$100</td><td class="num">80–95%</td></tr>
+      <tr><td><b>The5ers</b> <span style="color:var(--muted)">(est. 2016)</span></td><td class="num">8% / 5% (high-stakes)</td><td class="num">5%</td><td class="num">10%</td><td class="num">~$95</td><td class="num">80–100%</td></tr>
+      <tr><td><b>Funding Pips</b></td><td class="num">8% / 5%</td><td class="num">5%</td><td class="num">10% static</td><td class="num">~$70</td><td class="num">80–100%</td></tr>
+      <tr><td><b>E8 Markets</b></td><td class="num">8% / 5%</td><td class="num">5%</td><td class="num">8–10% (check type!)</td><td class="num">~$60</td><td class="num">80%</td></tr>
+    </table>
+    <div class="callout red">
+      <span class="ctag">Why "best firm" is the wrong question</span>
+      <p>Firms in this industry have collapsed overnight — including large, popular ones — taking traders' pending payouts with them. There is no permanently "best" firm, only firms that are currently paying out. Before buying, spend 30 minutes checking: years in operation, recent payout proof from independent traders, the 1-star reviews on Trustpilot (read what they failed people for), and whether the firm recently changed its rules or payment processors — both are classic distress signals.</p>
+    </div>
+
+    <h3>The firm-selection checklist</h3>
+    <ul>
+      <li><b>Static, not trailing, drawdown</b> — non-negotiable for a beginner.</li>
+      <li><b>No time limit on the challenge</b> (most major firms removed it — never accept a 30-day deadline; deadlines manufacture overtrading).</li>
+      <li><b>Clear, written rules</b> on news trading, weekend holding, and consistency — and read them twice. More traders fail on fine print than on markets.</li>
+      <li><b>Refundable fee</b> — several firms refund your challenge fee with the first payout. Prefer them.</li>
+      <li><b>Free trial available</b> — FTMO and others offer a free trial challenge. Do the free one first. It's the exact exam environment for €0.</li>
+      <li><b>Payout terms in writing:</b> frequency (weekly/bi-weekly/monthly), minimum, method, and whether a payout denial process exists. Search "[firm name] denied payout" before paying.</li>
+    </ul>
+
+    <div class="quiz" data-quiz="10">
+      <div class="q">
+        <div class="qq">Q1 — Two $10k challenges: Firm A, $60 fee with trailing drawdown; Firm B, $95 fee with static drawdown and a free-trial option. Which does a beginner choose?</div>
+        <div class="opt" data-c="0">Firm A — always minimise the fee</div>
+        <div class="opt" data-c="1">Firm B — static drawdown and a free rehearsal are worth far more than $35</div>
+        <div class="opt" data-c="0">Either — drawdown type doesn't matter if you trade well</div>
+        <div class="explain">Trailing drawdown fails winning traders during normal pullbacks. The cheapest challenge that's harder to pass is the expensive one.</div>
+      </div>
+      <div class="q">
+        <div class="qq">Q2 — What is the actual "entry requirement" of a prop firm?</div>
+        <div class="opt" data-c="0">A finance qualification and an interview</div>
+        <div class="opt" data-c="0">A minimum deposit of your own trading capital</div>
+        <div class="opt" data-c="1">Nothing but the fee — which is exactly why most buyers arrive unprepared</div>
+        <div class="explain">Zero barrier to entry is a feature of the business model, not a courtesy. Your preparation is the only admissions process that matters.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c10" onchange="markDone(10,this)">
+      <label for="c10">Mark Module 10 complete</label>
+    </div>
+  </div>
+</div>
+
+<!-- MODULE 11 -->
+<div class="module" data-mod="11">
+  <div class="mod-head" onclick="toggleMod(this)">
+    <span class="mod-num">11</span>
+    <span class="mod-title">A Challenge, Trade by Trade — and the 20 Rules</span>
+    <span class="mod-status">○ Not started</span>
+    <span class="chev">▶</span>
+  </div>
+  <div class="mod-body">
+    <p>Here is what passing actually looks like on a <b>$10,000 two-step challenge</b> (target +10% = $11,000; daily loss 5%; max drawdown 10%), traded with the Module 05 setup at <b>0.5% risk ($50) per trade, 1:2 reward-to-risk</b>. This ledger reflects realistic stats — a 45% win rate — over six weeks. Notice how unremarkable every single day is.</p>
+
+    <table>
+      <tr><th>Week</th><th>Trades</th><th>W–L</th><th>Result</th><th>Balance</th><th>Note</th></tr>
+      <tr><td class="num">1</td><td class="num">6</td><td class="num">3–3</td><td class="num"><span class="up">+$150</span></td><td class="num">$10,150</td><td>Two no-trade days (no setup). Fine.</td></tr>
+      <tr><td class="num">2</td><td class="num">5</td><td class="num">1–4</td><td class="num"><span class="dn">−$100</span></td><td class="num">$10,050</td><td>Losing week. Rules held: max −1% on the worst day, nowhere near the 5% limit.</td></tr>
+      <tr><td class="num">3</td><td class="num">7</td><td class="num">4–3</td><td class="num"><span class="up">+$250</span></td><td class="num">$10,300</td><td>One trade skipped: R:R was only 1:1.3. Skipping is a win.</td></tr>
+      <tr><td class="num">4</td><td class="num">6</td><td class="num">3–3</td><td class="num"><span class="up">+$150</span></td><td class="num">$10,450</td><td>NFP news day = no trading. The rulebook said so.</td></tr>
+      <tr><td class="num">5</td><td class="num">7</td><td class="num">4–3</td><td class="num"><span class="up">+$250</span></td><td class="num">$10,700</td><td>Three wins in a row mid-week. Size stayed at 0.5%. That's the test.</td></tr>
+      <tr><td class="num">6</td><td class="num">8</td><td class="num">4–4</td><td class="num"><span class="up">+$300+</span></td><td class="num"><b>$11,010 ✓</b></td><td>Risk cut to 0.25% after $10,800. Crossed the line on a boring Tuesday.</td></tr>
+    </table>
+    <p><b>39 trades, 19 winners, 20 losers — a sub-50% win rate — and a passed Phase 1.</b> No prediction genius, no big day, biggest single loss $50. Phase 2 (+5%) is the same process at the same risk, roughly three weeks. This is what the ~10% who pass are actually doing while everyone else looks for the secret.</p>
+
+    <h3>The same challenge, failed — for contrast</h3>
+    <p>Same trader, same setups, different behaviour: Week 2's four losses trigger a "win it back" double-size trade (−1% becomes −2%), then a revenge re-entry (−2% becomes −3.5%), then one more without a checklist (−3.5% becomes <b>−5.1% — daily limit breached, challenge over, fee gone</b>). Four trades, ninety minutes, and the difference between the two outcomes was never the analysis. It was Module 06.</p>
+
+    <div class="callout green">
+      <span class="ctag">Run it yourself</span>
+      <p>Put these exact stats — 45% win rate, 2R, 0.5% risk, 2 trades/day — into the Module 07 simulator and you'll see pass odds above 60%. Now change only the risk to 2.5% and watch it collapse. Every "trick" of passing is downstream of that one slider.</p>
+    </div>
+
+    <h3>The 20 rules of traders who actually get paid</h3>
+    <p><b>Preparation</b></p>
+    <ul>
+      <li><b>1.</b> No real money until three consecutive profitable demo months under full challenge rules. The market will still be there.</li>
+      <li><b>2.</b> One market, one setup, one timeframe combination. Add a second instrument only after your first payout, not before.</li>
+      <li><b>3.</b> Backtest 100 samples before demo, journal every trade after. Your spreadsheet is your real mentor.</li>
+      <li><b>4.</b> Do the firm's free trial as a dress rehearsal — same platform, same rules, zero cost.</li>
+      <li><b>5.</b> Read the full rulebook twice and write your own one-page summary of the failure conditions. Fine print fails more traders than markets do.</li>
+    </ul>
+    <p><b>During the challenge</b></p>
+    <ul>
+      <li><b>6.</b> Risk 0.5% per trade, 0.25% once within 2% of the target. The target has no deadline; your discipline does.</li>
+      <li><b>7.</b> Hard daily circuit-breakers: stop at 2 losses, −2%, or +2% — whichever comes first. Green days get banked, not extended.</li>
+      <li><b>8.</b> Stop loss set at entry, never widened, never removed. Take-profit set at entry too — then hands off.</li>
+      <li><b>9.</b> Keep worst-case open risk under half the daily limit at all times, including overnight and through spreads widening.</li>
+      <li><b>10.</b> No trading in the 15 minutes around red-folder news (rate decisions, NFP, CPI) — both because firms void those trades and because spreads eat you alive there.</li>
+      <li><b>11.</b> Trade your two best hours (for Ireland: the 13:30–16:30 London/NY overlap), then close the platform. Screen time is not edge.</li>
+      <li><b>12.</b> A skipped mediocre setup counts as a win in your journal. Track it.</li>
+    </ul>
+    <p><b>Mindset & money</b></p>
+    <ul>
+      <li><b>13.</b> Fixed risk regardless of mood, streak, or "certainty". The moment size follows feelings, the account follows gravity.</li>
+      <li><b>14.</b> After any rule break — even a profitable one — trading stops for 24 hours and the journal gets an incident report. Profitable rule breaks are the most expensive trades you'll ever make; they train the habit that kills you later.</li>
+      <li><b>15.</b> Total annual challenge-fee budget decided in advance, from money whose loss changes nothing. When it's spent, the answer is more demo, not more fees.</li>
+      <li><b>16.</b> Trading lives alongside income, never instead of it. Needing the money is the one edge-destroyer no strategy survives.</li>
+      <li><b>17.</b> Withdraw profits on every payout cycle. Money in a prop account is not yours until it's in your bank.</li>
+    </ul>
+    <p><b>Career</b></p>
+    <ul>
+      <li><b>18.</b> Once funded, change nothing. The funded account is traded exactly like the challenge — same size, same rules. Most funded accounts die in month one from "now I can finally size up".</li>
+      <li><b>19.</b> Scale by adding accounts/sizes through the firm's scaling plan, not by raising risk per trade.</li>
+      <li><b>20.</b> Review the journal weekly, monthly stats monthly. The trader you are in the spreadsheet is the only trader you are.</li>
+    </ul>
+
+    <div class="quiz" data-quiz="11">
+      <div class="q">
+        <div class="qq">Q1 — In the worked example, the challenge was passed with a 45% win rate. What made it work?</div>
+        <div class="opt" data-c="0">A few big winning days that did most of the work</div>
+        <div class="opt" data-c="1">Constant small risk + 1:2 reward-to-risk, compounded over six boring weeks</div>
+        <div class="opt" data-c="0">Predicting the market correctly most of the time</div>
+        <div class="explain">19 wins × 2R beat 20 losses × 1R. The pass was built from expectancy and pacing — the biggest single loss was $50 on a $10,000 account.</div>
+      </div>
+      <div class="q">
+        <div class="qq">Q2 — You break a rule and the trade wins anyway. What does Rule 14 say?</div>
+        <div class="opt" data-c="1">Stop for 24 hours and log an incident — the win reinforced a fatal habit</div>
+        <div class="opt" data-c="0">Nothing — results are what count</div>
+        <div class="opt" data-c="0">Donate the profit to make it fair</div>
+        <div class="explain">Rewarded rule breaks are how disciplined traders become gamblers. The market pays out bad behaviour just often enough to teach it.</div>
+      </div>
+    </div>
+    <div class="complete-row">
+      <input type="checkbox" id="c11" onchange="markDone(11,this)">
+      <label for="c11">Mark Module 11 complete</label>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Honesty note:</b> this course is education, not financial advice, and it can't change the base rates: most challenge buyers fail, and most retail traders lose money. What it can do is make sure that if you attempt this, you attempt it the way the successful minority does — slowly, cheaply, and with rules that survive bad days. Progress ticks reset if you refresh the page, so keep your own written journal as the permanent record.</p>
+  </div>
+</footer>
+
+<script>
+/* ── Module toggling & progress (in-memory) ── */
+const TOTAL = 11;
+const done = new Set();
+
+function toggleMod(head){
+  head.parentElement.classList.toggle('open');
+}
+function markDone(n, cb){
+  const mod = document.querySelector('.module[data-mod="'+n+'"]');
+  const status = mod.querySelector('.mod-status');
+  if(cb.checked){ done.add(n); status.textContent='● Complete'; status.classList.add('done'); }
+  else { done.delete(n); status.textContent='○ Not started'; status.classList.remove('done'); }
+  const pct = Math.round(done.size/TOTAL*100);
+  document.getElementById('pfill').style.width = pct+'%';
+  document.getElementById('plabel').textContent = done.size+' / '+TOTAL;
+}
+
+/* ── Quizzes ── */
+document.querySelectorAll('.q').forEach(q=>{
+  const opts = q.querySelectorAll('.opt');
+  opts.forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      if(q.dataset.answered) return;
+      q.dataset.answered = '1';
+      const correct = opt.dataset.c === '1';
+      opt.classList.add(correct?'correct':'wrong');
+      if(!correct){
+        opts.forEach(o=>{ if(o.dataset.c==='1') o.classList.add('correct'); });
+      }
+      const ex = q.querySelector('.explain');
+      if(ex) ex.classList.add('show');
+    });
+  });
+});
+
+/* ── Position size calculator ── */
+function calcPos(){
+  const acc = +document.getElementById('ps-acc').value;
+  const risk = +document.getElementById('ps-risk').value;
+  const sl = +document.getElementById('ps-sl').value;
+  const pip = +document.getElementById('ps-pip').value;
+  const out = document.getElementById('ps-out');
+  if(!(acc>0&&risk>0&&sl>0&&pip>0)){ out.textContent='Please enter positive numbers in every field.'; return; }
+  const riskAmt = acc*risk/100;
+  const lots = riskAmt/(sl*pip);
+  out.innerHTML =
+    'Money at risk: <span class="big">$'+riskAmt.toFixed(2)+'</span>\n'+
+    'Position size: <span class="big">'+lots.toFixed(2)+' lots</span>\n'+
+    'If the stop is hit you lose exactly '+risk+'% — survivable, planned, boring. That\'s the point.' +
+    (risk>1 ? '\n\n⚠ Risk above 1% per trade: on a challenge, a normal 5-trade losing streak now threatens the daily limit. Consider 0.5–1%.' : '');
+}
+
+/* ── Drawdown recovery ── */
+function calcDD(){
+  const dd = +document.getElementById('dd-in').value;
+  const out = document.getElementById('dd-out');
+  if(!(dd>0&&dd<100)){ out.textContent='Enter a drawdown between 0 and 100.'; return; }
+  const rec = (dd/(100-dd))*100;
+  out.innerHTML = 'A −'+dd+'% drawdown needs <span class="big">+'+rec.toFixed(1)+'%</span> just to get back to breakeven.\n'+
+  (dd>=10 ? 'On a standard challenge, −10% is not a drawdown — it\'s a failed account. The max drawdown line is a cliff, not a slope.' :
+   'Small drawdowns heal fast. That\'s the entire argument for the 1% rule.');
+}
+
+/* ── Challenge simulator ── */
+function runSim(){
+  const wr = (+document.getElementById('sim-wr').value)/100;
+  const rr = +document.getElementById('sim-rr').value;
+  const riskPct = (+document.getElementById('sim-risk').value)/100;
+  const tpd = Math.min(3, Math.max(1, +document.getElementById('sim-tpd').value));
+  const out = document.getElementById('sim-out');
+  if(!(wr>0&&wr<1&&rr>0&&riskPct>0)){ out.textContent='Check your inputs: win rate 1–99, positive R and risk.'; return; }
+
+  const N=1000, TARGET=1.10, MAXDD=0.90, DAILY=0.05, DAYS=60;
+  let pass=0, failDaily=0, failMax=0, timeout=0, dayTotals=[];
+  const sampleCurves=[];
+
+  for(let i=0;i<N;i++){
+    let eq=1, peakFail=false, res=null, curve=[1];
+    for(let d=0; d<DAYS; d++){
+      const dayStart=eq;
+      for(let t=0;t<tpd;t++){
+        const win = Math.random()<wr;
+        eq += win ? eq*riskPct*rr : -eq*riskPct;
+        if(dayStart - eq >= dayStart*DAILY){ res='daily'; break; }
+        if(eq<=MAXDD){ res='max'; break; }
+        if(eq>=TARGET){ res='pass'; break; }
+      }
+      curve.push(eq);
+      if(res) { dayTotals.push(d+1); break; }
+    }
+    if(!res) res='timeout';
+    if(res==='pass')pass++; else if(res==='daily')failDaily++; else if(res==='max')failMax++; else timeout++;
+    if(sampleCurves.length<40) sampleCurves.push({curve,res});
+  }
+
+  const passRate=(pass/N*100).toFixed(1);
+  const avgDays = dayTotals.length? Math.round(dayTotals.reduce((a,b)=>a+b,0)/dayTotals.length):DAYS;
+  out.innerHTML =
+    'Pass rate: <span class="big">'+passRate+'%</span>  (of 1,000 simulated challenges)\n'+
+    'Failed on daily loss limit: '+(failDaily/N*100).toFixed(1)+'%   Failed on max drawdown: '+(failMax/N*100).toFixed(1)+'%\n'+
+    'Ran out of the 60-day window: '+(timeout/N*100).toFixed(1)+'%   Average decision in ~'+avgDays+' trading days\n\n'+
+    (passRate<25 ? 'Below ~25%: expect to buy several challenges before one passes — meaning this plan isn\'t ready. More demo time or better R:R first.' :
+     passRate<50 ? 'Workable but expensive: budget for 2–3 attempts. Lowering risk per trade usually raises this number.' :
+     'Strong plan — if (and only if) three demo months prove these stats are really yours.');
+  drawCurves(sampleCurves);
+}
+
+function drawCurves(samples){
+  const cv=document.getElementById('sim-canvas');
+  const dpr=window.devicePixelRatio||1;
+  const W=cv.clientWidth, H=220;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const yMin=0.86, yMax=1.14;
+  const y=v=>H-( (v-yMin)/(yMax-yMin) )*H;
+  // guide lines
+  const guides=[[1.10,'#4CAF7D','TARGET +10%'],[1.0,'#8B95A6',''],[0.90,'#DE5B5B','FAIL −10%']];
+  ctx.font='10px IBM Plex Mono, monospace';
+  guides.forEach(([v,c,label])=>{
+    ctx.strokeStyle=c; ctx.globalAlpha=.55; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(0,y(v)); ctx.lineTo(W,y(v)); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha=1;
+    if(label){ ctx.fillStyle=c; ctx.fillText(label,6,y(v)-4); }
+  });
+  samples.forEach(({curve,res})=>{
+    ctx.strokeStyle = res==='pass' ? 'rgba(76,175,125,.5)' : res==='timeout' ? 'rgba(139,149,166,.3)' : 'rgba(222,91,91,.35)';
+    ctx.lineWidth=1.2;
+    ctx.beginPath();
+    curve.forEach((v,i)=>{
+      const x=i/(curve.length-1||1)*W;
+      const vy=y(Math.min(yMax,Math.max(yMin,v)));
+      i?ctx.lineTo(x,vy):ctx.moveTo(x,vy);
+    });
+    ctx.stroke();
+  });
+}
+</script>
+</body>
+</html>
